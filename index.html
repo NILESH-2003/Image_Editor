@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Compression Application</title>
+    <style>
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  line-height: 1.6;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 1rem 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+header h1 {
+  font-size: 2rem;
+  color: #fff;
+}
+
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.container {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+input[type="file"] {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+input[type="number"] {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button[type="button"] {
+  padding: 0.8rem 1.2rem;
+  margin-right: 1rem;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="button"]:hover {
+  background-color: #0056b3;
+}
+
+#result {
+  display: none;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#result h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+#compressedImage {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+#downloadLink {
+  display: block;
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #337ab7;
+  text-decoration: none;
+}
+
+#downloadLink:hover {
+  color: #23527c;
+}
+
+footer {
+  text-align: center;
+  background-color: #333;
+  color: #fff;
+  padding: 1rem 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+    </style>
+</head>
+<body style="background-color:lightblue">
+    <header>
+        <h1 style="color: white">Image Editor</h1>
+    </header>
+
+    <main>
+        <div class="container" style="background-color: #ffffcc">
+            <h1>Image Compression Tool</h1>
+
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="inputImage">Select an Image:</label>
+                    <input type="file" id="inputImage" name="imageFile" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label for="compressionPercentage">Compression Percentage:</label>
+                    <input type="number" id="compressionPercentage" name="compressionPercentage" min="1" max="99" value="50" required>
+                </div>
+
+                <button type="button" class="btn" onclick="compressImage()">Compress Image</button>
+            </form>
+
+            <div id="result" style="display: none;">
+                <h2>Compressed Image</h2>
+                <img id="compressedImage" src="" alt="Compressed Image">
+                <a id="downloadLink" href="" download>Download Compressed Image</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Image Editor</p>
+    </footer>
+
+<script>
+    function compressImage() {
+        const form = document.getElementById('uploadForm');
+        const formData = new FormData(form);
+
+        fetch('/compress', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Log the response data to console for debugging
+            console.log(data);
+
+            // Update the image and download link
+            document.getElementById('compressedImage').src = '/' + data.compressed_image;
+            document.getElementById('downloadLink').href = '/' + data.download_link;
+            document.getElementById('result').style.display = 'block';
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+</body>
+</html>
